@@ -4,6 +4,7 @@
     font-family: "Hiragino Sans GB", "Helvetica Neue", sans-serif;
     border: 2px solid #333;
     padding: 1em;
+    position: relative;
 }
 
 #statusBar {
@@ -17,10 +18,33 @@
     padding: 0.5em;
 }
 
+#characterBox div {
+    display: inline-block;
+}
+
 .suspicious {
-    background: #F55;
+    background: #8CF;
     font-weight: bolder;
     cursor: pointer;
-    padding: 0.1em;
-    display: inline-block;
+    padding: 0 0.2em;
+}
+
+.hintPopup {
+    position: absolute;
+    width: 500px;
+    border: 5px solid #111;
+    background-color: #EEE;
+    padding: 1em;
+    line-height: 2;
+}
+
+.spanTradChar {
+    margin-left: 0.1em;
+    margin-right: 0.1em;
+    cursor: pointer;
+}
+
+.spanTradChar-chosen {
+    border: 1px solid black;
+    font-weight: bolder;
 }
