@@ -19,9 +19,9 @@ Flow of Information
 2. The frontend passes the text to the backend;
 3. The backend, using a conversion engine and a dictionary, transforms the text into Traditional Chinese;
 4. The backend returns three things to frontend -
-- the Text in Traditional Chinese,
-- all changes made,
-- notes about changes that could go wrong, usually one-to-multiple conversions;
+i. the Text in Traditional Chinese,
+ii. all changes made, and
+iii. notes about changes that could go wrong, usually one-to-multiple conversions;
 5. The frontend displays the Text in Traditional Chinese, highlights the changes, and shows options for each un-confirmed changes;
 6. The user inspect the changes and revise accordingly; and
 7. The user gets the inspected Text in Traditional Chinese.
