@@ -17,9 +17,15 @@
   var OpenCC = require('opencc');
   var opencc = new OpenCC('s2hk.json');
 
+  app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
   app.use(bodyParser.text({defaultCharset: 'utf-8'}));
 
-  app.post('/',function(request, response){
+  app.post('/',function(request, response, next){
     "use strict";
 
     function calcDiffLocations(s1, s2) {
