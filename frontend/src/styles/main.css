@@ -6,8 +6,21 @@
     padding: 1em;
 }
 
+#statusBar {
+    padding: 2px;
+}
+
 #text {
     border: 1px solid #333;
     min-height: 500px;
-    margin: 1em 0;
+    margin: 1em 0 0 0;
+    padding: 0.5em;
+}
+
+.suspicious {
+    background: #F55;
+    font-weight: bolder;
+    cursor: pointer;
+    padding: 0.1em;
+    display: inline-block;
 }

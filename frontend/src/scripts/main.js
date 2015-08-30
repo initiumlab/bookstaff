@@ -1,14 +1,34 @@
 var bookstaffMain = (function(window, document){
   "use strict";
 
-  function ajaxPost(content) {
+  function postAndUpdate(content, targetDOMNode) {
     //var url = "//104.236.146.235";
     var url="https://249b92b5.ngrok.io";
     var req = new XMLHttpRequest;
     req.open('POST', url, true);
     req.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
     req.onload = function () {
-      console.log('response=('+req.responseText+')');
+      var response = JSON.parse(req.responseText);
+      var i;
+      var targetHTML = '';
+
+      var multipleMappingLocations = response.locationWithNotes.map(function(entry){
+        return entry.location
+      });
+
+      // Add the text back
+      var tradText = response.tradText;
+      for (i = 0; i < tradText.length; i += 1) {
+        if (multipleMappingLocations.indexOf(i) !== -1) {
+          var detailedClass = 'suspicious-' + content[i];
+          targetHTML += '<span class="suspicious ' + detailedClass + '">' + tradText[i] + '</span>';
+        } else {
+          targetHTML += tradText[i];
+        }
+      }
+
+      targetDOMNode.innerHTML = targetHTML;
+
     };
     req.send(content);
   }
@@ -23,9 +43,11 @@ var bookstaffMain = (function(window, document){
     }
   });
 
+  // Config post button
   var btnPost = document.getElementById('btnPost');
   btnPost.addEventListener('click', function(){
-    ajaxPost(text.innerText);
+    firstClick = false;
+    postAndUpdate(text.innerText, divText);
   })
 
 }(window, window.document));
