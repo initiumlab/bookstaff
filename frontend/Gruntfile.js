@@ -144,7 +144,7 @@ module.exports = function(grunt) {
       options: {
         base: 'dist',
         branch: 'gh-pages',
-        repo: 'https://github.com/initiummedia/wy-index.git'
+        repo: 'https://github.com/initiumlab/bookstaff.git'
       },
       src: '**/*'
     },
@@ -187,7 +187,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build',  ['clean:dev', 'copy:dev', 'inline:dev']);
   grunt.registerTask('serve',  ['build', 'connect', 'watch']);
-  grunt.registerTask('deploy', ['clean:dist', 'inline:dist', 'browserify:dist', 'copy', 'concat:dist', 'uglify',
-    'targethtml:prod', 'htmlmin',
+  grunt.registerTask('deploy', ['clean:dist', 'copy:dist', 'inline:dist', 'targethtml:prod', 'htmlmin',
     'gh-pages', 'rsync']);
 };

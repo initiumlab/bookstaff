@@ -1,15 +1,205 @@
-<!DOCTYPE html>
-<html lang="zh-hant">
+<!DOCTYPE html><html lang="zh-hant"><head><meta charset="utf-8"><title>校書郎</title><style>#container {
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: "Hiragino Sans GB", "Helvetica Neue", sans-serif;
+    border: 2px solid #333;
+    padding: 1em;
+    position: relative;
+}
 
-  <head>
-    <meta charset="utf-8" />
-    <title>校書郎</title>
-    <link type="text/css" rel="stylesheet" href="./styles/main.css?__inline=true" />
-  </head>
+#statusBar {
+    padding: 2px;
+}
 
-  <body>
+#text {
+    border: 1px solid #333;
+    min-height: 500px;
+    margin: 1em 0 0 0;
+    padding: 0.5em;
+}
 
-    <script src="./scripts/main.js?__inline=true"></script>
-  </body>
+#characterBox div {
+    display: inline-block;
+}
 
-</html>
+.suspicious {
+    background: #8CF;
+    font-weight: bolder;
+    cursor: pointer;
+    padding: 0 0.2em;
+}
+
+.hintPopup {
+    position: absolute;
+    width: 500px;
+    border: 5px solid #111;
+    background-color: #EEE;
+    padding: 1em;
+    line-height: 2;
+}
+
+.spanTradChar {
+    margin-left: 0.1em;
+    margin-right: 0.1em;
+    cursor: pointer;
+}
+
+.spanTradChar-chosen {
+    border: 1px solid black;
+    font-weight: bolder;
+}</style></head><body><div id="container"><h1 id="title">校書郎</h1><div id="statusBar"><button id="btnPost">來人啊，統統給我轉成傳統字！</button></div><div id="text" contenteditable>宋神宗上榜，首先要感谢北宋感谢人民。中国皇朝的财富积累鼎峰并不在唐，而在宋。一反前朝“重农抑商”传统，宋代大兴商业、金融初现、科技猛进、城市崛起。宋史学者Ronald A. Edwards（艾德荣）统计，北宋经济巅峰时，财富超过整个欧洲，占世界GDP的25%—30%。李约瑟（Joseph Needham）也曾在研究中称，与宋代同时期，欧洲出现的科学技术创新潮流主要是受到中国影响。</div></div><script>var bookstaffMain = (function(window, document){
+  "use strict";
+
+  function postAndUpdate(content, targetDOMNode) {
+    var url = "//104.236.146.235";
+    //var url="https://249b92b5.ngrok.io";
+    var req = new XMLHttpRequest;
+    req.open('POST', url, true);
+    req.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
+    req.onload = function () {
+      var response = JSON.parse(req.responseText);
+      var i;
+      var targetHTML = '';
+      var previousPopup = null;
+
+      var multipleMappingLocations = response.locationWithNotes.map(function(entry){
+        return entry.location
+      });
+
+      // Add the text back
+      var tradText = response.tradText;
+      for (i = 0; i < tradText.length; i += 1) {
+        if (multipleMappingLocations.indexOf(i) !== -1) {
+          var detailedClass = 'suspicious-' + content[i];
+          targetHTML += '<span class="suspicious ' + detailedClass + '">' + tradText[i] + '</span>';
+        } else {
+          targetHTML += tradText[i];
+        }
+      }
+
+      targetDOMNode.innerHTML = targetHTML;
+
+      // Add popups
+      function getPopupCallBack(spanInText) {
+        return function(event){
+          var char = spanInText.innerText;
+          var i, j, tradChar;
+
+          // Insert the div
+          var divPopup = document.createElement('div');
+          divPopup.classList.add('hintPopup');
+          divPopup.style.top = event.pageY + 15 + 'px';
+          divPopup.style.left = event.pageX - 250 + 'px';
+
+          document.body.appendChild(divPopup);
+
+          // Create layout in the div
+
+          // first line
+          var characterBox = document.createElement('div');
+          characterBox.id = 'characterBox';
+
+          var divSimpChar = document.createElement('div');
+          var divTradChars = document.createElement('div');
+          var spanTradChar;
+          var note;
+          divSimpChar.id = 'divSimpChar';
+          divTradChars.id = 'divTradChars';
+          characterBox.appendChild(divSimpChar);
+          characterBox.appendChild(divTradChars);
+
+          divPopup.appendChild(characterBox);
+
+          for (i = 0; i < response.locationWithNotes.length; i += 1) {
+            if (response.locationWithNotes[i].note.hantChars.indexOf(char) !== -1) {
+              note = response.locationWithNotes[i].note;
+              break;
+            }
+          }
+
+          divSimpChar.innerText = '簡化字：' + note.hansChar + '  |  傳統字：';
+
+          // Add traditional Chinese characters
+
+          for (i = 0; i < note.hantChars.split(' ').length; i += 1) {
+            tradChar = note.hantChars.split(' ')[i];
+            spanTradChar = document.createElement('span');
+            spanTradChar.innerText = tradChar;
+            spanTradChar.classList.add('spanTradChar');
+            divTradChars.appendChild(spanTradChar);
+
+            if (spanTradChar.innerText === spanInText.innerText) {
+              spanTradChar.classList.add('spanTradChar-chosen');
+            }
+
+            spanTradChar.addEventListener('mousedown', function(spanInText) {
+              return function(event) {
+                spanInText.innerText = event.target.innerText;
+                var allSpanTradChar = document.getElementsByClassName('spanTradChar');
+
+                for (j = 0; j < allSpanTradChar.length; j += 1) {
+                  allSpanTradChar[j].classList.remove('spanTradChar-chosen');
+                }
+                event.target.classList.add('spanTradChar-chosen');
+              }
+            }(spanInText))
+          }
+
+          // second line
+          var explanation = document.createElement('div');
+          explanation.innerText = "解釋：" + note.explanation;
+          divPopup.appendChild(explanation);
+
+          // third line
+          var example = document.createElement('div');
+          example.innerText = "用例：" + note.example;
+          divPopup.appendChild(example);
+
+          // fourth line
+          var btnConfirm = document.createElement('button');
+          btnConfirm.innerText = '確認修改';
+          btnConfirm.id = 'btnConfirm';
+          btnConfirm.addEventListener('mousedown', function(){
+            previousPopup.style.display = 'none';
+          });
+          divPopup.appendChild(btnConfirm);
+
+          // Hide the previous popup when the next one is activated
+          if (previousPopup) {
+            previousPopup.style.display = 'none';
+          }
+          previousPopup = divPopup;
+        };
+      }
+
+      // Add popup event-binding
+      var suspiciousSpans = document.getElementsByClassName('suspicious');
+      var span;
+      for (i = 0; i < suspiciousSpans.length; i += 1) {
+        span = suspiciousSpans[i];
+        span.addEventListener('mousedown', getPopupCallBack(span));
+      }
+
+    };
+
+    req.send(content);
+  }
+
+  // Config text area
+  var divText = document.getElementById('text');
+  var firstClick = true;
+  divText.addEventListener('mousedown', function(event){
+    if (firstClick) {
+      event.target.innerHTML = '';
+      firstClick = false;
+    }
+  });
+
+  // Config post button
+  var btnPost = document.getElementById('btnPost');
+  btnPost.addEventListener('click', function(){
+    firstClick = false;
+    postAndUpdate(text.innerText, divText);
+  })
+
+}(window, window.document));</script></body></html>

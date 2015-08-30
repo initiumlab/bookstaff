@@ -2,8 +2,8 @@ var bookstaffMain = (function(window, document){
   "use strict";
 
   function postAndUpdate(content, targetDOMNode) {
-    //var url = "//104.236.146.235";
-    var url="https://249b92b5.ngrok.io";
+    var url = "//104.236.146.235";
+    //var url="https://249b92b5.ngrok.io";
     var req = new XMLHttpRequest;
     req.open('POST', url, true);
     req.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
