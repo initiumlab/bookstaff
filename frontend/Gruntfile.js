@@ -109,8 +109,8 @@ module.exports = function(grunt) {
       },
       dist: {
         files: [
-          {expand: true, flatten: true, src: ['src/*'], dest: 'dist/', filter: 'isFile'},
-          {expand: true, flatten: true, src: ['src/images/*'], dest: 'dist/images/'},
+          {expand: true, flatten: true, src: ['src/**/*'], dest: 'build/', filter: 'isFile'},
+          {expand: true, flatten: true, src: ['src/CNAME'], dest: 'dist/', filter: 'isFile'},
         ]
       },
       CNAME: {
