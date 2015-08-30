@@ -14,7 +14,7 @@ module.exports = function(grunt) {
           cssmin: false,
           uglify: false
         },
-        src: 'src/index.html',
+        src: 'build/index.html',
         dest: 'build/index.html'
       },
       dist: {
@@ -22,7 +22,7 @@ module.exports = function(grunt) {
           cssmin: true,
           uglify: true
         },
-        src: 'src/index.html',
+        src: 'build/index.html',
         dest: 'dist/index.html'
       }
     },
@@ -52,7 +52,7 @@ module.exports = function(grunt) {
 
     watch: {
       app: {
-        files: ['src/index.html', 'src/scripts/*.jsx'],
+        files: ['src/**/*'],
         options: {
           livereload: true
         },
@@ -63,7 +63,7 @@ module.exports = function(grunt) {
     connect: {
       dist: {
         options: {
-          port: 9000,
+          port: 9090,
           hostname: '0.0.0.0',
           base: 'build/'
         }
@@ -104,8 +104,7 @@ module.exports = function(grunt) {
     copy: {
       dev: {
         files: [
-          {expand: true, flatten: true, src: ['src/*'], dest: 'build/', filter: 'isFile'},
-          {expand: true, flatten: true, src: ['src/images/*'], dest: 'build/images/'},
+          {expand: true, flatten: true, src: ['src/**/*'], dest: 'build/', filter: 'isFile'},
         ]
       },
       dist: {
@@ -159,7 +158,7 @@ module.exports = function(grunt) {
       showcase: {
         options: {
           src: "./dist/",
-          dest: "/home/vagrant/web/wy-index",
+          dest: "/home/vagrant/web/bookstaff",
           host: "showcase",
           delete: true // Careful this option could cause data loss, read the docs!
         }
@@ -186,7 +185,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-rsync');
   grunt.loadNpmTasks('grunt-targethtml');
 
-  grunt.registerTask('build',  ['clean:dev', 'inline:dev', 'browserify:dev', 'copy', 'concat:dev']);
+  grunt.registerTask('build',  ['clean:dev', 'copy:dev', 'inline:dev']);
   grunt.registerTask('serve',  ['build', 'connect', 'watch']);
   grunt.registerTask('deploy', ['clean:dist', 'inline:dist', 'browserify:dist', 'copy', 'concat:dist', 'uglify',
     'targethtml:prod', 'htmlmin',
