@@ -62,11 +62,12 @@
     }
 
     function applyInitiumFix(text) {
-      var i, fix;
+      var i, fix, re_fixFrom;
       var result = text;
       for (i = 0; i < initium_fix.length; i += 1) {
         fix = initium_fix[i];
-        result = result.replace(fix.from, fix.to)
+        re_fixFrom = new RegExp(fix.from, 'g');
+        result = result.replace(re_fixFrom, fix.to);
       }
       console.log('initium fix applied');
       return result;
@@ -76,8 +77,11 @@
     var content = {};
 
     var simpText = request.body;
+    console.log('simpText='+simpText);
     var tradText = opencc.convertSync(simpText);
+    console.log('tradText='+tradText);
     content.tradText = applyInitiumFix(tradText);
+    console.log('after initum fix=', content.tradText);
     
     content.diffLocations = calcDiffLocations(simpText, tradText);
 
