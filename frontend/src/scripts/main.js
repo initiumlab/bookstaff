@@ -117,9 +117,12 @@ var bookstaffMain = (function(window, document){
           var btnConfirm = document.createElement('button');
           btnConfirm.innerText = '確認修改';
           btnConfirm.id = 'btnConfirm';
-          btnConfirm.addEventListener('mousedown', function(){
-            previousPopup.style.display = 'none';
-          });
+          btnConfirm.addEventListener('mousedown', function(spanInFocus){
+            return function(){
+              previousPopup.style.display = 'none';
+              spanInFocus.classList.remove('suspicious');
+            }
+          }(spanInText));
           divPopup.appendChild(btnConfirm);
 
           // Hide the previous popup when the next one is activated
