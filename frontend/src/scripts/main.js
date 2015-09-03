@@ -153,6 +153,18 @@ var bookstaffMain = (function(window, document){
     }
   });
 
+  // Remove format from paste
+  divText.addEventListener('paste', function(event){
+    event.preventDefault();
+    divText.innerText = event.clipboardData.getData('text');
+  });
+
+  // Remove format when copying
+  divText.addEventListener('copy', function(event){
+    event.preventDefault();
+    event.clipboardData.setData('text/plain', divText.innerText);
+  });
+
   // Config post button
   var btnPost = document.getElementById('btnPost');
   btnPost.addEventListener('click', function(){
