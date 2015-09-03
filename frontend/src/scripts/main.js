@@ -20,9 +20,16 @@ var bookstaffMain = (function(window, document){
       // Add the text back
       var tradText = response.tradText;
       for (i = 0; i < tradText.length; i += 1) {
+
+        // The character has one-to-multiple mapping relationship and is suspicious of mistakes
         if (multipleMappingLocations.indexOf(i) !== -1) {
           var detailedClass = 'suspicious-' + content[i];
           targetHTML += '<span class="suspicious ' + detailedClass + '">' + tradText[i] + '</span>';
+
+        // It's a newline
+        } else if (tradText[i].charCodeAt(0) === 10) {
+          targetHTML += '<br>';
+
         } else {
           targetHTML += tradText[i];
         }
