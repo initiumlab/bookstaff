@@ -13,9 +13,9 @@
     }
     return result;
   }());
-
   var OpenCC = require('opencc');
   var opencc = new OpenCC('s2hk.json');
+  var initium_fix = JSON.parse(fs.readFileSync('initium_fix.json', 'utf-8'));
 
   app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -61,12 +61,23 @@
       return result;
     }
 
+    function applyInitiumFix(text) {
+      var i, fix;
+      var result = text;
+      for (i = 0; i < initium_fix.length; i += 1) {
+        fix = initium_fix[i];
+        result = result.replace(fix.from, fix.to)
+      }
+      console.log('initium fix applied');
+      return result;
+    }
+
     response.setHeader('Content-Type', 'application/json');
     var content = {};
 
     var simpText = request.body;
     var tradText = opencc.convertSync(simpText);
-    content.tradText = tradText;
+    content.tradText = applyInitiumFix(tradText);
     
     content.diffLocations = calcDiffLocations(simpText, tradText);
 
