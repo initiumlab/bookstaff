@@ -48,3 +48,7 @@
     border: 1px solid black;
     font-weight: bolder;
 }
+
+.btnPost {
+    font-size: 1.5em;
+}

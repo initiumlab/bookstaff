@@ -169,8 +169,8 @@ var bookstaffMain = (function(window, document){
   });
 
   // Config post button
-  var btnPost = document.getElementById('btnPost');
-  btnPost.addEventListener('click', function(){
+  var btnTraditionalize = document.getElementById('btnTraditionalize');
+  btnTraditionalize.addEventListener('click', function(){
     firstClick = false;
     postAndUpdate(text.innerText, divText);
   })
