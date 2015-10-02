@@ -17,6 +17,7 @@
   var opencc = new OpenCC('s2hk.json');
   var openccT2S = new OpenCC('t2s.json');
   var initium_fix = JSON.parse(fs.readFileSync('initium_fix.json', 'utf-8'));
+  var initium_fix_simp = JSON.parse(fs.readFileSync('initium_fix_simp.json', 'utf-8'));
 
   app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -74,25 +75,37 @@
       return result;
     }
 
+    function applyInitiumFixSimp(text) {
+      var i, fix, re_fixFrom;
+      var result = text;
+      for (i = 0; i < initium_fix_simp.length; i += 1) {
+        fix = initium_fix_simp[i];
+        re_fixFrom = new RegExp(fix.from, 'g');
+        result = result.replace(re_fixFrom, fix.to);
+      }
+      console.log('initium fix applied');
+      return result;
+    }
+
     response.setHeader('Content-Type', 'application/json');
     var content = {};
 
     if (request.body.indexOf('[[SIMP]]') === -1) {
-      // Traditional Chinese
-      var simpText = request.body;
-      console.log('simpText='+simpText);
-      var tradText = opencc.convertSync(simpText);
-      console.log('tradText='+tradText);
-      content.tradText = applyInitiumFix(tradText);
-      console.log('after initum fix=', content.tradText);
+        // Traditional Chinese
+    var simpText = request.body;
+    console.log('simpText='+simpText);
+    var tradText = opencc.convertSync(simpText);
+    console.log('tradText='+tradText);
+    content.tradText = applyInitiumFix(tradText);
+    console.log('after initum fix=', content.tradText);
     } else {
-      // Simplified Chinese
-      var tradText = request.body.replace('[[SIMP]]', '');
-      console.log('tradText='+tradText);
-      var simpText = openccT2S.convertSync(tradText);
-      console.log('simpText='+simpText);
-      content.simpText = applyInitiumFix(simpText);
-      console.log('after initum fix=', content.simpText);
+       // Simplified Chinese
+       var tradText = request.body.replace('[[SIMP]]', '');
+       console.log('tradText='+tradText);
+       var simpText = openccT2S.convertSync(tradText);
+       console.log('simpText='+simpText);
+       content.simpText = applyInitiumFixSimp(simpText);
+       console.log('after initum fix=', content.simpText);
     }
 
     content.diffLocations = calcDiffLocations(simpText, tradText);
