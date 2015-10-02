@@ -1,6 +1,13 @@
 var bookstaffMain = (function(window, document){
   "use strict";
 
+  // Check innerText
+
+  var div = document.createElement('div');
+  if (typeof div.innerText !== 'string') {
+    alert('您的瀏覽器不支持校書郎目前必須的功能(innerText),請換一個瀏覽器再試.')
+  };
+
   var previousPopup = null;
 
   function postSimpAndUpdate(content, targetDOMNode) {
@@ -230,6 +237,25 @@ var bookstaffMain = (function(window, document){
         previousPopup.style.display = 'none';
       }
 
+    }
+
+  });
+
+
+  // Add functionality for clear all button
+
+  var btnClearAll = document.getElementById('clearAll');
+  btnClearAll.addEventListener('click', function() {
+
+    var suspiciousSpans = document.getElementsByClassName('suspicious');
+    var i, span;
+    console.log(suspiciousSpans);
+
+    for (i = 0; i < suspiciousSpans.length; i += 1) {
+      span = suspiciousSpans[i];
+      span.style.backgroundColor = 'white';
+      span.style.padding = '0';
+      span.style.fontWeight = 'inherit';
     }
 
   });

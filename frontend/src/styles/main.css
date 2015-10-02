@@ -53,8 +53,15 @@ body {
     font-weight: bolder;
 }
 
-.btnPost {
+button {
     font-size: 1.5em;
     display: block;
     margin-top: 0.5em;
+    font-weight: bolder;
+}
+
+#clearAll {
+    font-size: 1em;
+    font-weight: lighter;
+    background-color: #F99;
 }
