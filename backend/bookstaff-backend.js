@@ -15,6 +15,7 @@
   }());
   var OpenCC = require('opencc');
   var opencc = new OpenCC('s2hk.json');
+  var openccT2S = new OpenCC('t2s.json');
   var initium_fix = JSON.parse(fs.readFileSync('initium_fix.json', 'utf-8'));
 
   app.use(function(req, res, next) {
@@ -76,17 +77,26 @@
     response.setHeader('Content-Type', 'application/json');
     var content = {};
 
-    var simpText = request.body;
-    console.log('simpText='+simpText);
-    var tradText = opencc.convertSync(simpText);
-    console.log('tradText='+tradText);
-    content.tradText = applyInitiumFix(tradText);
-    console.log('after initum fix=', content.tradText);
-    
+    if (request.body.indexOf('[[SIMP]]') === -1) {
+      // Traditional Chinese
+      var simpText = request.body;
+      console.log('simpText='+simpText);
+      var tradText = opencc.convertSync(simpText);
+      console.log('tradText='+tradText);
+      content.tradText = applyInitiumFix(tradText);
+      console.log('after initum fix=', content.tradText);
+    } else {
+      // Simplified Chinese
+      var tradText = request.body.replace('[[SIMP]]', '');
+      console.log('tradText='+tradText);
+      var simpText = openccT2S.convertSync(tradText);
+      console.log('simpText='+simpText);
+      content.simpText = applyInitiumFix(simpText);
+      console.log('after initum fix=', content.simpText);
+    }
+
     content.diffLocations = calcDiffLocations(simpText, tradText);
-
     content.locationWithNotes = getLocationWithNotes(simpText, content.diffLocations);
-
     response.end(JSON.stringify(content));
   });
 

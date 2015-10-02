@@ -3,12 +3,13 @@ var bookstaffMain = (function(window, document){
 
   var previousPopup = null;
 
-  function postAndUpdate(content, targetDOMNode) {
+  function postSimpAndUpdate(content, targetDOMNode) {
     var url = "//104.236.146.235";
     var req = new XMLHttpRequest;
     req.open('POST', url, true);
     req.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
     req.onload = function () {
+
       var response = JSON.parse(req.responseText);
       var i;
       var targetHTML = '';
@@ -144,8 +145,44 @@ var bookstaffMain = (function(window, document){
       }
 
     };
-
     req.send(content);
+  }
+
+  function postTradAndUpdate(content, targetDOMNode) {
+    var url = "//104.236.146.235";
+    var req = new XMLHttpRequest;
+    req.open('POST', url, true);
+    req.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
+    req.onload = function() {
+
+      var response = JSON.parse(req.responseText);
+      console.log(response);
+      var i;
+      var targetHTML = '';
+
+      var multipleMappingLocations = response.locationWithNotes.map(function(entry) {
+        return entry.location
+      });
+
+      // Add the text back
+      var simpText = response.simpText;
+      for (i = 0; i < simpText.length; i += 1) {
+
+        // It's a newline
+        if (simpText[i].charCodeAt(0) === 10) {
+          targetHTML += '<br>';
+
+        } else {
+          targetHTML += '<span>' + simpText[i] + '</span>';
+        }
+      }
+
+      targetDOMNode.innerHTML = targetHTML;
+
+    }
+
+    req.send('[[SIMP]]' + content);
+
   }
 
   // Config text area
@@ -174,7 +211,13 @@ var bookstaffMain = (function(window, document){
   var btnTraditionalize = document.getElementById('btnTraditionalize');
   btnTraditionalize.addEventListener('click', function(){
     firstClick = false;
-    postAndUpdate(text.innerText, divText);
+    postSimpAndUpdate(text.innerText, divText);
+  });
+
+  var btnSimplify = document.getElementById('btnSimplify');
+  btnSimplify.addEventListener('click', function(){
+    firstClick = false;
+    postTradAndUpdate(text.innerText, divText);
   });
 
   // Click anywhere to close an opened popup
