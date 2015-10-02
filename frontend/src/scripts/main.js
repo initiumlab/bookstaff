@@ -31,7 +31,7 @@ var bookstaffMain = (function(window, document){
           targetHTML += '<br>';
 
         } else {
-          targetHTML += tradText[i];
+          targetHTML += '<span>' + tradText[i] + '</span>';
         }
       }
 
