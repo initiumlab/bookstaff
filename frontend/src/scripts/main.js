@@ -1,9 +1,10 @@
 var bookstaffMain = (function(window, document){
   "use strict";
 
+  var previousPopup = null;
+
   function postAndUpdate(content, targetDOMNode) {
     var url = "//104.236.146.235";
-    //var url="https://249b92b5.ngrok.io";
     var req = new XMLHttpRequest;
     req.open('POST', url, true);
     req.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
@@ -11,7 +12,6 @@ var bookstaffMain = (function(window, document){
       var response = JSON.parse(req.responseText);
       var i;
       var targetHTML = '';
-      var previousPopup = null;
 
       var multipleMappingLocations = response.locationWithNotes.map(function(entry){
         return entry.location
@@ -90,7 +90,7 @@ var bookstaffMain = (function(window, document){
               spanTradChar.classList.add('spanTradChar-chosen');
             }
 
-            spanTradChar.addEventListener('mousedown', function(spanInText) {
+            spanTradChar.addEventListener('click', function(spanInText) {
               return function(event) {
                 spanInText.innerText = event.target.innerText;
                 var allSpanTradChar = document.getElementsByClassName('spanTradChar');
@@ -117,7 +117,7 @@ var bookstaffMain = (function(window, document){
           var btnConfirm = document.createElement('button');
           btnConfirm.innerText = '確認修改';
           btnConfirm.id = 'btnConfirm';
-          btnConfirm.addEventListener('mousedown', function(spanInFocus){
+          btnConfirm.addEventListener('click', function(spanInFocus){
             return function(){
               previousPopup.style.display = 'none';
               spanInFocus.classList.remove('suspicious');
@@ -129,6 +129,8 @@ var bookstaffMain = (function(window, document){
           if (previousPopup) {
             previousPopup.style.display = 'none';
           }
+          // Prevent the click listener on body to hear it, which causes the popup to be closed immediately
+          event.stopPropagation();
           previousPopup = divPopup;
         };
       }
@@ -138,7 +140,7 @@ var bookstaffMain = (function(window, document){
       var span;
       for (i = 0; i < suspiciousSpans.length; i += 1) {
         span = suspiciousSpans[i];
-        span.addEventListener('mousedown', getPopupCallBack(span));
+        span.addEventListener('click', getPopupCallBack(span));
       }
 
     };
@@ -149,7 +151,7 @@ var bookstaffMain = (function(window, document){
   // Config text area
   var divText = document.getElementById('text');
   var firstClick = true;
-  divText.addEventListener('mousedown', function(event){
+  divText.addEventListener('click', function(event){
     if (firstClick) {
       event.target.innerHTML = '';
       firstClick = false;
@@ -173,6 +175,20 @@ var bookstaffMain = (function(window, document){
   btnTraditionalize.addEventListener('click', function(){
     firstClick = false;
     postAndUpdate(text.innerText, divText);
-  })
+  });
+
+  // Click anywhere to close an opened popup
+  document.body.addEventListener('click', function(event) {
+
+    if (!event.target.classList.contains('hintPopup')) {
+
+      // A non-popup is clicked, hide the previous popup
+      if (previousPopup !== null) {
+        previousPopup.style.display = 'none';
+      }
+
+    }
+
+  });
 
 }(window, window.document));
