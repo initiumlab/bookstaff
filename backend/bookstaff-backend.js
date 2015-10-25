@@ -91,21 +91,21 @@
     var content = {};
 
     if (request.body.indexOf('[[SIMP]]') === -1) {
-        // Traditional Chinese
-    var simpText = request.body;
-    console.log('simpText='+simpText);
-    var tradText = opencc.convertSync(simpText);
-    console.log('tradText='+tradText);
-    content.tradText = applyInitiumFix(tradText);
-    console.log('after initum fix=', content.tradText);
+      // Traditional Chinese
+      var simpText = request.body;
+      console.log('simpText='+simpText);
+      var tradText = opencc.convertSync(simpText);
+      console.log('tradText='+tradText);
+      content.tradText = applyInitiumFix(tradText);
+      console.log('after initum fix=', content.tradText);
     } else {
-       // Simplified Chinese
-       var tradText = request.body.replace('[[SIMP]]', '');
-       console.log('tradText='+tradText);
-       var simpText = openccT2S.convertSync(tradText);
-       console.log('simpText='+simpText);
-       content.simpText = applyInitiumFixSimp(simpText);
-       console.log('after initum fix=', content.simpText);
+      // Simplified Chinese
+      var tradText = request.body.replace('[[SIMP]]', '');
+      console.log('tradText='+tradText);
+      var simpText = openccT2S.convertSync(tradText);
+      console.log('simpText='+simpText);
+      content.simpText = applyInitiumFixSimp(simpText);
+      console.log('after initum fix=', content.simpText);
     }
 
     content.diffLocations = calcDiffLocations(simpText, tradText);
