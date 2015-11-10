@@ -187,6 +187,8 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build',  ['clean:dev', 'copy:dev', 'inline:dev']);
   grunt.registerTask('serve',  ['build', 'connect', 'watch']);
-  grunt.registerTask('deploy', ['clean:dist', 'copy:dist', 'inline:dist', 'targethtml:prod', 'htmlmin',
-    'gh-pages', 'rsync']);
+  grunt.registerTask('deploy:staging', ['clean:dist', 'copy:dist', 'inline:dist', 'targethtml:prod', 'htmlmin',
+    'rsync']);
+  grunt.registerTask('deploy:prod', ['clean:dist', 'copy:dist', 'inline:dist', 'targethtml:prod', 'htmlmin',
+    'gh-pages']);
 };
