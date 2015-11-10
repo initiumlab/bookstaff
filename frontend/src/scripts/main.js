@@ -11,7 +11,7 @@ var bookstaffMain = (function(window, document){
   var previousPopup = null;
 
   function postSimpAndUpdate(content, targetDOMNode) {
-    var url = "//104.236.146.235";
+    var url = "//188.166.226.248";
     var req = new XMLHttpRequest;
     req.open('POST', url, true);
     req.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
@@ -156,7 +156,7 @@ var bookstaffMain = (function(window, document){
   }
 
   function postTradAndUpdate(content, targetDOMNode) {
-    var url = "//104.236.146.235";
+    var url = "//188.166.226.248";
     var req = new XMLHttpRequest;
     req.open('POST', url, true);
     req.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
