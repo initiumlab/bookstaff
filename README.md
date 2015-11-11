@@ -5,24 +5,24 @@ A interface for Simplified-to-Traditonal Chinese conversion, for professional ed
 
 ## Install Node.js 0.12
 
-'''
+```
 nvm install 0.12
 nvm use 0.12
 npm install
-'''
+```
 
 ## Run frontend
-'''
+```
 cd frontend
 grunt build
 grunt serve
-'''
+```
 
 ## Run backend
-'''
+```
 cd backend
 pm2 start bookstaff-backend.js
-'''
+```
 
 # Acknowledgements
 This project uses OpenCC as conversion engine by default.
