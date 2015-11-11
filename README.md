@@ -17,8 +17,14 @@ cd frontend
 grunt build
 grunt serve
 ```
+Visit localhost:9090.
 
 ## Run backend
+Map port 80 to 8080.
+```
+sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+```
+Start 'bookstaff-backend.js'.
 ```
 cd backend
 pm2 start bookstaff-backend.js
