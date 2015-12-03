@@ -111,6 +111,9 @@ module.exports = function(grunt) {
         files: [
           {expand: true, flatten: true, src: ['src/**/*'], dest: 'build/', filter: 'isFile'},
           {expand: true, flatten: true, src: ['src/CNAME'], dest: 'dist/', filter: 'isFile'},
+            '../meta.json',
+            '../thumbnail.jpg'
+
         ]
       },
       CNAME: {
